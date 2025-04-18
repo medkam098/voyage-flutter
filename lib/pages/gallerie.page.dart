@@ -49,35 +49,6 @@ class GalleriePage extends StatelessWidget {
 
     return BasePage(
       title: "Galerie",
-      actions: [
-        IconButton(
-          icon: const Icon(Icons.search),
-          onPressed: () {
-            // Implement search functionality
-            showSearch(
-              context: context,
-              delegate: GallerySearchDelegate(images),
-            );
-          },
-        ),
-        PopupMenuButton<String>(
-          onSelected: (String value) {
-            // Implement filter functionality
-          },
-          itemBuilder: (BuildContext context) {
-            return [
-              const PopupMenuItem(value: "all", child: Text("Tous")),
-              const PopupMenuItem(value: "nature", child: Text("Nature")),
-              const PopupMenuItem(value: "landscape", child: Text("Paysage")),
-              const PopupMenuItem(value: "urban", child: Text("Urbain")),
-              const PopupMenuItem(
-                value: "architecture",
-                child: Text("Architecture"),
-              ),
-            ];
-          },
-        ),
-      ],
       body: Column(
         children: [
           Expanded(
@@ -255,15 +226,6 @@ class GalleriePage extends StatelessWidget {
                           Navigator.of(context).pop();
                         },
                         child: Text("Annuler", style: AppTheme.linkTextStyle),
-                      ),
-                      const SizedBox(width: 16),
-                      ElevatedButton(
-                        onPressed: () {
-                          // Implement save functionality
-                          Navigator.of(context).pop();
-                        },
-                        style: AppTheme.primaryButtonStyle,
-                        child: const Text("Enregistrer"),
                       ),
                     ],
                   ),
