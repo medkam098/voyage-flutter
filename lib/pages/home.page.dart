@@ -16,8 +16,7 @@ class Home extends StatelessWidget {
       body: Column(
         crossAxisAlignment: CrossAxisAlignment.stretch,
         children: [
-          // Welcome section
-
+          // Welcome section (si vous en avez une)
 
           // Quick actions section
           Padding(
@@ -33,17 +32,17 @@ class Home extends StatelessWidget {
                   Icons.explore,
                   'Explorer',
                   AppTheme.primaryColor,
-                  () => Navigator.pushNamed(context, '/pays'),
+                      () => Navigator.pushNamed(context, '/pays'),
                 ),
               ),
               const SizedBox(width: 16),
               Expanded(
                 child: _buildActionCard(
                   context,
-                  Icons.photo_library,
-                  'Galerie',
-                  AppTheme.secondaryColor,
-                  () => Navigator.pushNamed(context, '/gallerie'),
+                  Icons.wb_sunny,
+                  'Météo',
+                  AppTheme.accentColor,
+                      () => Navigator.pushNamed(context, '/meteo'),
                 ),
               ),
             ],
@@ -54,22 +53,38 @@ class Home extends StatelessWidget {
               Expanded(
                 child: _buildActionCard(
                   context,
-                  Icons.people,
-                  'Amis',
-                  AppTheme.accentColor,
-                  () => Navigator.pushNamed(context, '/mates'),
+                  Icons.photo_library,
+                  'Galerie',
+                  AppTheme.secondaryColor,
+                      () => Navigator.pushNamed(context, '/gallerie'),
                 ),
               ),
               const SizedBox(width: 16),
               Expanded(
                 child: _buildActionCard(
                   context,
+                  Icons.people,
+                  'Amis',
+                  AppTheme.accentColor,
+                      () => Navigator.pushNamed(context, '/mates'),
+                ),
+              ),
+            ],
+          ),
+          const SizedBox(height: 16),
+          Row(
+            children: [
+              Expanded(
+                child: _buildActionCard(
+                  context,
                   Icons.contact_mail,
                   'Contact',
                   AppTheme.primaryColor.withAlpha(180),
-                  () => Navigator.pushNamed(context, '/contact'),
+                      () => Navigator.pushNamed(context, '/contact'),
                 ),
               ),
+              const SizedBox(width: 16),
+              const Expanded(child: SizedBox()), // Placeholder pour équilibrer la grille
             ],
           ),
 
@@ -87,12 +102,12 @@ class Home extends StatelessWidget {
   }
 
   Widget _buildActionCard(
-    BuildContext context,
-    IconData icon,
-    String title,
-    Color color,
-    VoidCallback onTap,
-  ) {
+      BuildContext context,
+      IconData icon,
+      String title,
+      Color color,
+      VoidCallback onTap,
+      ) {
     final themeProvider = Provider.of<ThemeProvider>(context, listen: false);
     final isDarkMode = themeProvider.isDarkMode;
 
@@ -119,7 +134,6 @@ class Home extends StatelessWidget {
   }
 
   Future<void> _onDeconnecter(BuildContext context) async {
-    // Get the navigator before the async gap
     final navigator = Navigator.of(context);
     prefs = await SharedPreferences.getInstance();
     prefs.setBool("connecte", false);

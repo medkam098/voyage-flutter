@@ -21,15 +21,15 @@ class MyDrawer extends StatelessWidget {
             padding: const EdgeInsets.only(top: 50, bottom: 16),
             decoration: BoxDecoration(
               color:
-                  isDarkMode
-                      ? AppTheme.secondaryColorLight
-                      : AppTheme.primaryColorLight,
+              isDarkMode
+                  ? AppTheme.secondaryColorLight
+                  : AppTheme.primaryColorLight,
               border: Border(
                 bottom: BorderSide(
                   color:
-                      isDarkMode
-                          ? AppTheme.dividerColor
-                          : AppTheme.primaryColor.withAlpha(40),
+                  isDarkMode
+                      ? AppTheme.dividerColor
+                      : AppTheme.primaryColor.withAlpha(40),
                   width: 1,
                 ),
               ),
@@ -45,7 +45,7 @@ class MyDrawer extends StatelessWidget {
                     ),
                     boxShadow: [
                       BoxShadow(
-                        color: isDarkMode 
+                        color: isDarkMode
                             ? Colors.black26
                             : AppTheme.shadowColor,
                         blurRadius: isDarkMode ? 6 : 8,
@@ -56,8 +56,8 @@ class MyDrawer extends StatelessWidget {
                   child: CircleAvatar(
                     backgroundImage: const AssetImage("images/profil.jpg"),
                     radius: 50,
-                    backgroundColor: isDarkMode 
-                        ? AppTheme.surfaceColor 
+                    backgroundColor: isDarkMode
+                        ? AppTheme.surfaceColor
                         : Colors.white,
                   ),
                 ),
@@ -65,8 +65,8 @@ class MyDrawer extends StatelessWidget {
                 AppText.heading(
                   "Voyage",
                   style: TextStyle(
-                    color: isDarkMode 
-                        ? AppTheme.textColor 
+                    color: isDarkMode
+                        ? AppTheme.textColor
                         : Colors.white,
                     fontWeight: AppTheme.boldWeight,
                   ),
@@ -75,7 +75,7 @@ class MyDrawer extends StatelessWidget {
                 AppText.caption(
                   "Explorez le monde",
                   style: TextStyle(
-                    color: isDarkMode 
+                    color: isDarkMode
                         ? AppTheme.textColor.withOpacity(0.8)
                         : Colors.white.withOpacity(0.8),
                   ),
@@ -90,6 +90,13 @@ class MyDrawer extends StatelessWidget {
             title: "Accueil",
             icon: Icons.home,
             route: '/home',
+            isDarkMode: isDarkMode,
+          ),
+          _buildMenuItem(
+            context: context,
+            title: "Météo",
+            icon: Icons.wb_sunny,
+            route: '/meteo',
             isDarkMode: isDarkMode,
           ),
           _buildMenuItem(
@@ -113,12 +120,10 @@ class MyDrawer extends StatelessWidget {
             route: '/pays',
             isDarkMode: isDarkMode,
           ),
-
           const Padding(
             padding: EdgeInsets.symmetric(horizontal: 16),
             child: Divider(),
           ),
-
           _buildMenuItem(
             context: context,
             title: "Contact",
@@ -133,9 +138,7 @@ class MyDrawer extends StatelessWidget {
             route: '/parametres',
             isDarkMode: isDarkMode,
           ),
-
           const SizedBox(height: 8),
-
           Padding(
             padding: const EdgeInsets.symmetric(horizontal: 16),
             child: AppButton(
@@ -150,7 +153,7 @@ class MyDrawer extends StatelessWidget {
                 prefs.setBool("connecte", false);
                 navigator.pushNamedAndRemoveUntil(
                   '/inscription',
-                  (route) => false,
+                      (route) => false,
                 );
               },
             ),

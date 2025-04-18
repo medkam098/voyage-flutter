@@ -4,6 +4,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 import 'package:voyage/pages/authentification.page.dart';
 import 'package:voyage/pages/inscription.page.dart';
 import 'package:voyage/pages/home.page.dart';
+import 'package:voyage/pages/meteo.page.dart';
 import 'theme/app_theme.dart';
 import 'providers/theme_provider.dart';
 import 'package:voyage/pages/contact.page.dart';
@@ -30,6 +31,7 @@ class MyApp extends StatelessWidget {
     '/parametres': (context) => ParametresPage(),
     '/pays': (context) => PaysPage(),
     '/mates': (context) => MatesPage(),
+    '/meteo': (context) => MeteoPage(),
   };
   @override
   Widget build(BuildContext context) {
