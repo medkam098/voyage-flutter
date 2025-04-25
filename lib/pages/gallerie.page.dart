@@ -1,161 +1,158 @@
 import 'package:flutter/material.dart';
-import '../widgets/base_page.dart';
+import 'package:provider/provider.dart';
+import 'package:voyage/pages/gallerie-details.page.dart';
 import '../theme/app_theme.dart';
+import '../providers/theme_provider.dart';
+import '../widgets/base_page.dart';
+import '../menu/drawer.widget.dart';
 
-class GalleriePage extends StatelessWidget {
+class GalleriePage extends StatefulWidget {
   const GalleriePage({super.key});
 
   @override
-  Widget build(BuildContext context) {
-    // Sample data for the gallery
-    final List<Map<String, dynamic>> images = [
-      {
-        "title": "Beach Sunset",
-        "description": "Beautiful sunset at the beach",
-        "imageUrl": "https://picsum.photos/200/300?random=1",
-        "category": "Nature",
-      },
-      {
-        "title": "Mountain View",
-        "description": "Scenic mountain landscape",
-        "imageUrl": "https://picsum.photos/200/300?random=2",
-        "category": "Landscape",
-      },
-      {
-        "title": "City Lights",
-        "description": "Night city skyline",
-        "imageUrl": "https://picsum.photos/200/300?random=3",
-        "category": "Urban",
-      },
-      {
-        "title": "Forest Path",
-        "description": "Path through dense forest",
-        "imageUrl": "https://picsum.photos/200/300?random=4",
-        "category": "Nature",
-      },
-      {
-        "title": "Desert Dunes",
-        "description": "Sandy dunes at sunset",
-        "imageUrl": "https://picsum.photos/200/300?random=5",
-        "category": "Landscape",
-      },
-      {
-        "title": "Ancient Architecture",
-        "description": "Historic building facade",
-        "imageUrl": "https://picsum.photos/200/300?random=6",
-        "category": "Architecture",
-      },
-    ];
+  State<GalleriePage> createState() => _GalleriePageState();
+}
 
-    return BasePage(
-      title: "Galerie",
-      body: Column(
-        children: [
-          Expanded(
-            child: GridView.builder(
-              padding: AppTheme.paddingSmall,
-              gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-                crossAxisCount: 2,
-                crossAxisSpacing: 10,
-                mainAxisSpacing: 10,
-                childAspectRatio: 0.75,
+class _GalleriePageState extends State<GalleriePage> {
+  final TextEditingController _keywordController = TextEditingController();
+  String? _errorText;
+  bool _isLoading = false;
+
+  void _rechercherPhotos() async {
+    final keyword = _keywordController.text.trim();
+    if (keyword.isEmpty) {
+      setState(() {
+        _errorText = "Veuillez entrer un mot-clé.";
+      });
+      return;
+    }
+
+    setState(() {
+      _isLoading = true;
+      _errorText = null;
+    });
+
+    // Simulate API call delay
+    await Future.delayed(const Duration(milliseconds: 500));
+
+    try {
+      await _onGetGallerieDetails(context);
+    } catch (e) {
+      setState(() {
+        _errorText = "Erreur lors de la recherche. Veuillez réessayer.";
+      });
+    } finally {
+      setState(() {
+        _isLoading = false;
+      });
+    }
+  }
+
+  Future<void> _onGetGallerieDetails(BuildContext context) async {
+    String keyword = _keywordController.text.trim();
+    await Navigator.push(
+      context,
+      MaterialPageRoute(
+        builder: (context) => GallerieDetailsPage(keyword),
+      ),
+    );
+    _keywordController.clear();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    final themeProvider = Provider.of<ThemeProvider>(context);
+    final isDarkMode = themeProvider.isDarkMode;
+
+    return Scaffold(
+      drawer: const MyDrawer(),
+      body: BasePage(
+        title: 'Galerie',
+        body: SingleChildScrollView(
+          keyboardDismissBehavior: ScrollViewKeyboardDismissBehavior.onDrag,
+          padding: AppTheme.paddingMedium,
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Text(
+                'Rechercher des photos',
+                style: AppTheme.headingStyle,
               ),
-              itemCount: images.length,
-              itemBuilder: (context, index) {
-                return GestureDetector(
-                  onTap: () {
-                    _showImageDetails(context, images[index]);
-                  },
-                  child: Card(
-                    elevation: 2,
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(8),
-                    ),
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.stretch,
-                      children: [
-                        Expanded(
-                          child: Image.network(
-                            images[index]["imageUrl"],
-                            fit: BoxFit.cover,
-                            loadingBuilder: (context, child, loadingProgress) {
-                              if (loadingProgress == null) return child;
-                              return Center(
-                                child: CircularProgressIndicator(
-                                  value: loadingProgress.expectedTotalBytes != null
-                                      ? loadingProgress.cumulativeBytesLoaded /
-                                      loadingProgress.expectedTotalBytes!
-                                      : null,
-                                ),
-                              );
-                            },
-                          ),
-                        ),
-                        Padding(
-                          padding: AppTheme.paddingSmall,
-                          child: Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              Text(
-                                images[index]["title"],
-                                style: AppTheme.subheadingStyle.copyWith(
-                                  fontSize: 16,
-                                ),
-                                maxLines: 1,
-                                overflow: TextOverflow.ellipsis,
-                              ),
-                              Text(
-                                images[index]["category"],
-                                style: TextStyle(
-                                  color: AppTheme.captionColor,
-                                  fontSize: 12,
-                                ),
-                              ),
-                            ],
-                          ),
-                        ),
-                      ],
-                    ),
+              const SizedBox(height: 8),
+              Text(
+                'Entrez un mot-clé pour rechercher des photos',
+                style: AppTheme.bodyTextStyle.copyWith(
+                  color: isDarkMode ? AppTheme.captionColor : AppTheme.textSecondaryColor,
+                ),
+              ),
+              const SizedBox(height: 30),
+              TextField(
+                controller: _keywordController,
+                decoration: AppTheme.inputDecoration(
+                  'Mot-clé',
+                  'ex: Nature',
+                  Icons.search,
+                ).copyWith(
+                  errorText: _errorText,
+                  filled: true,
+                  fillColor: isDarkMode ? AppTheme.cardColor : Colors.grey[100],
+                  border: OutlineInputBorder(
+                    borderRadius: BorderRadius.circular(12),
                   ),
-                );
-              },
-            ),
+                  labelStyle: TextStyle(
+                    color: isDarkMode ? AppTheme.textColor : AppTheme.textSecondaryColor,
+                  ),
+                  hintStyle: TextStyle(
+                    color: isDarkMode ? AppTheme.captionColor : Colors.grey[600],
+                  ),
+                  suffixIcon: _keywordController.text.isNotEmpty
+                      ? IconButton(
+                    icon: const Icon(Icons.clear),
+                    onPressed: () {
+                      _keywordController.clear();
+                      setState(() {
+                        _errorText = null;
+                      });
+                    },
+                  )
+                      : null,
+                ),
+                onSubmitted: (_) => _rechercherPhotos(),
+                onChanged: (_) => setState(() {
+                  _errorText = null;
+                }),
+              ),
+              const SizedBox(height: 20),
+              SizedBox(
+                width: double.infinity,
+                height: 50,
+                child: ElevatedButton.icon(
+                  icon: _isLoading
+                      ? const SizedBox(
+                    width: 24,
+                    height: 24,
+                    child: CircularProgressIndicator(
+                      strokeWidth: 2,
+                      color: Colors.white,
+                    ),
+                  )
+                      : const Icon(Icons.search),
+                  label: Text(_isLoading ? 'Recherche...' : 'Rechercher'),
+                  style: AppTheme.primaryButtonStyle,
+                  onPressed: _isLoading ? null : _rechercherPhotos,
+                ),
+              ),
+            ],
           ),
-        ],
+        ),
       ),
     );
   }
 
-  void _showImageDetails(BuildContext context, Map<String, dynamic> image) {
-    showDialog(
-      context: context,
-      builder: (context) => Dialog(
-        child: Column(
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            Image.network(image["imageUrl"], fit: BoxFit.cover),
-            Padding(
-              padding: AppTheme.paddingMedium,
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Text(image["title"], style: AppTheme.headingStyle),
-                  const SizedBox(height: 8),
-                  Text(image["description"], style: AppTheme.bodyTextStyle),
-                  const SizedBox(height: 8),
-                  Text(
-                    "Catégorie: ${image["category"]}",
-                    style: TextStyle(
-                      fontSize: 14,
-                      color: AppTheme.captionColor,
-                    ),
-                  ),
-                ],
-              ),
-            ),
-          ],
-        ),
-      ),
-    );
+  @override
+  void dispose() {
+    _keywordController.dispose();
+    super.dispose();
   }
 }
