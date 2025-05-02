@@ -29,7 +29,7 @@ class Home extends StatelessWidget {
               Expanded(
                 child: _buildActionCard(
                   context,
-                  Icons.explore,
+                  Icons.public,
                   'Explorer',
                   AppTheme.primaryColor,
                       () => Navigator.pushNamed(context, '/pays'),
