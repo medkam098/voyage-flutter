@@ -144,14 +144,6 @@ class _PaysDetailsState extends State<PaysDetails> {
                         height: 100,
                         width: double.infinity,
                         fit: BoxFit.cover,
-                        errorBuilder: (context, error, stackTrace) {
-                          print('Flag loading error: $error');
-                          return Icon(
-                            Icons.broken_image,
-                            size: 50,
-                            color: AppTheme.captionColor,
-                          );
-                        },
                       )
                           : Icon(
                         Icons.broken_image,
